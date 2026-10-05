@@ -2,7 +2,7 @@ const SHEET_NAME = 'Students';
 const TEST_PREFIX = 'T';
 
 function doGet() {
-  return HtmlService.createTemplateFromFile('Index')
+  return HtmlService.createTemplateFromFile('index')
     .evaluate()
     .setTitle('رؤية التعليمية')
     .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
