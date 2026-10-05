@@ -14,11 +14,11 @@ function setupSheet() {
   if (!sh) sh = ss.insertSheet(SHEET_NAME);
 
   const baseHeaders = ['الكود','اسم الطالب','النوع','الرقم الشخصي','رقم ولي الأمر'];
-  const current = sh.getLastColumn() ? sh.getRange(1,1,1,sh.getLastColumn()).getValues()[0] : [];
+  const current = sh.getLastColumn() ? sh.getRange(1, 1, 1, sh.getLastColumn()).getValues()[0] : [];
   const headers = current.filter(String);
 
   if (headers.length === 0) {
-    sh.getRange(1,1,1,baseHeaders.length).setValues([baseHeaders]);
+    sh.getRange(1, 1, 1, baseHeaders.length).setValues([baseHeaders]);
   } else {
     const missing = baseHeaders.filter(h => !headers.includes(h));
     if (missing.length) {
@@ -26,7 +26,7 @@ function setupSheet() {
     }
   }
   sh.setFrozenRows(1);
-  sh.getRange(1,1,1,Math.max(sh.getLastColumn(),5))
+  sh.getRange(1, 1, 1, Math.max(sh.getLastColumn(), 5))
     .setFontWeight('bold');
   return true;
 }
@@ -52,7 +52,7 @@ function addStudent(data) {
   lock.waitLock(10000);
   try {
     const lastRow = sh.getLastRow();
-    const all = lastRow > 1 ? sh.getRange(2,1,lastRow-1,Math.max(5,sh.getLastColumn())).getValues() : [];
+    const all = lastRow > 1 ? sh.getRange(2, 1, lastRow - 1, Math.max(5, sh.getLastColumn())).getValues() : [];
     const prefix = data.gender === 'M' ? 'S1M' : 'S1F';
     let max = 0;
     all.forEach(r => {
@@ -71,7 +71,7 @@ function addStudent(data) {
       String(data.personal || '').trim(),
       String(data.guardian || '').trim()
     ]);
-    return {ok:true, code};
+    return {ok: true, code};
   } finally {
     lock.releaseLock();
   }
@@ -79,11 +79,11 @@ function addStudent(data) {
 
 function addTest() {
   const sh = getSheet_();
-  const headers = sh.getRange(1,1,1,Math.max(5,sh.getLastColumn())).getValues()[0];
+  const headers = sh.getRange(1, 1, 1, Math.max(5, sh.getLastColumn())).getValues()[0];
   let max = 0;
   headers.forEach(h => {
     const m = String(h).match(/^T(\d+)$/i);
-    if (m) max = Math.max(max, parseInt(m[1],10));
+    if (m) max = Math.max(max, parseInt(m[1], 10));
   });
   const next = 'T' + (max + 1);
   sh.getRange(1, sh.getLastColumn() + 1).setValue(next);
@@ -98,13 +98,13 @@ function updateGrade(code, test, grade) {
   const col = headers.indexOf(test);
   if (col === -1) throw new Error('الاختبار غير موجود.');
   let row = -1;
-  for (let i=1; i<data.length; i++) {
-    if (String(data[i][0]) === String(code)) { row = i+1; break; }
+  for (let i = 1; i < data.length; i++) {
+    if (String(data[i][0]) === String(code)) { row = i + 1; break; }
   }
   if (row === -1) throw new Error('الطالب غير موجود.');
   const v = grade === '' || grade === null ? '' : Number(grade);
   if (grade !== '' && isNaN(v)) throw new Error('الدرجة يجب أن تكون رقمًا.');
-  sh.getRange(row, col+1).setValue(v);
+  sh.getRange(row, col + 1).setValue(v);
   return true;
 }
 
@@ -112,10 +112,10 @@ function getStudent(code) {
   const sh = getSheet_();
   const data = sh.getDataRange().getValues();
   const headers = data[0].map(String);
-  for (let i=1; i<data.length; i++) {
+  for (let i = 1; i < data.length; i++) {
     if (String(data[i][0]) === String(code)) {
       const obj = {};
-      headers.forEach((h,j)=>obj[h]=data[i][j]);
+      headers.forEach((h, j) => obj[h] = data[i][j]);
       return obj;
     }
   }
